@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import { FC } from "react";
 import Link from "next/link";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
 import * as chrono from "chrono-node";
 import Countdown from "react-countdown";
 import { useReadContract } from "wagmi";
@@ -11,12 +11,11 @@ import LegoImage from "~~/public/lego.png";
 import RolexImage from "~~/public/rolex.png";
 import ShoesImage from "~~/public/shoes.png";
 import StarWarsImage from "~~/public/star-wars.png";
-import { Separator } from "~~/~/components/ui/separator";
 
 const AUCTION_PLACEHOLDER_DATA = [
+  { image: RolexImage, title: "Rolex", description: "A brand new Rolex watch" },
   { image: IPhoneImage, title: "iPhone", description: "A brand new iPhone 15" },
   { image: LegoImage, title: "Lego", description: "A brand new Lego set" },
-  { image: RolexImage, title: "Rolex", description: "A brand new Rolex watch" },
   { image: ShoesImage, title: "Shoes", description: "A brand new pair of shoes" },
   { image: StarWarsImage, title: "Star Wars", description: "A brand new Star Wars action figure" },
 ];
@@ -57,23 +56,32 @@ const AuctionCard: FC<AuctionCardProps> = ({ auctionId }) => {
 
   return (
     <Link href={`/auction/${auctionId}`}>
-      <Card>
+      <Card className="hover:shadow-lg hover:scale-[1.01] transition-all duration-300">
         <CardHeader>
-          <CardTitle>{AUCTION_PLACEHOLDER_DATA[Number(auctionId)].title}</CardTitle>
+          <p className="text-muted-foreground text-sm">Auction #{auctionId}</p>
+          <CardTitle>
+            <h2 className="text-2xl font-bold">{AUCTION_PLACEHOLDER_DATA[Number(auctionId)].title}</h2>
+          </CardTitle>
         </CardHeader>
         <CardContent>
-          <img
-            src={AUCTION_PLACEHOLDER_DATA[Number(auctionId)].image.src}
-            alt={AUCTION_PLACEHOLDER_DATA[Number(auctionId)].title}
-          />
-          <div className="card-body">
+          <hr className="border border-gray-200 mb-8" />
+          <div className="aspect-square relative rounded-xl overflow-hidden bg-muted">
+            <img
+              className="w-full h-full object-cover object-center"
+              src={AUCTION_PLACEHOLDER_DATA[Number(auctionId)].image.src}
+              alt={AUCTION_PLACEHOLDER_DATA[Number(auctionId)].title}
+            />
+          </div>
+          {/* <div className="card-body">
             <div className="flex flex-col items-center justify-center">
               {biddingUnit && <p>Bidding Unit: {fromWei(biddingUnit)} TEST</p>}
               {bidsCount !== undefined && <p>Bids Count: {bidsCount.toString()}</p>}
             </div>
-            <Separator />
+          </div> */}
+          <hr className="border border-gray-200 my-8" />
+          <CardDescription>
             {endTime && <AuctionState endTime={BigInt(new Date(2032, 8 - 1, 23).getTime() / 1000)} />}
-          </div>
+          </CardDescription>
         </CardContent>
       </Card>
     </Link>

@@ -130,11 +130,12 @@ contract LUBA {
   function getPublicAuctionData(uint256 auctionId) public view returns (
     uint256 endTime,
     uint256 biddingUnit,
-    uint256 bidsCount
+    uint256 bidsCount,
+    address creator
   ) {
     Auction storage auction = auctions[auctionId];
 
-    return (auction.endTime, auction.biddingUnit, auction.bids.length);
+    return (auction.endTime, auction.biddingUnit, auction.bids.length, auction.creator);
   }
 
   function getCreatorAuctionData(uint256 auctionId) public view returns (

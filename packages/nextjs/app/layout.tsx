@@ -10,7 +10,7 @@ const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
   return (
     <html suppressHydrationWarning>
       <body>
-        <div className="max-w-3xl mx-auto bg-gray-600">
+        <div className="max-w-3xl mx-auto">
           <ThemeProvider enableSystem>
             <ScaffoldEthAppWithProviders>{children}</ScaffoldEthAppWithProviders>
           </ThemeProvider>
