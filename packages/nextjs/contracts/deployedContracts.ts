@@ -7,7 +7,7 @@ import { GenericContractsDeclaration } from "~~/utils/scaffold-eth/contract";
 const deployedContracts = {
   23295: {
     LUBA: {
-      address: "0xC7544d622c3d07814044A905e664A85C56eD9CCa",
+      address: "0xFdC838454Dfd2ED507f5CC24A9B610FA6cf5639a",
       abi: [
         {
           inputs: [
@@ -110,11 +110,6 @@ const deployedContracts = {
             },
             {
               internalType: "uint256",
-              name: "currentLowestBidIndex",
-              type: "uint256",
-            },
-            {
-              internalType: "uint256",
               name: "totalBidAmount",
               type: "uint256",
             },
@@ -151,6 +146,19 @@ const deployedContracts = {
             },
           ],
           stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "auctionId",
+              type: "uint256",
+            },
+          ],
+          name: "endAuction",
+          outputs: [],
+          stateMutability: "nonpayable",
           type: "function",
         },
         {
@@ -220,36 +228,10 @@ const deployedContracts = {
               name: "bidsCount",
               type: "uint256",
             },
-          ],
-          stateMutability: "view",
-          type: "function",
-        },
-        {
-          inputs: [
             {
-              internalType: "uint256",
-              name: "auctionId",
-              type: "uint256",
-            },
-          ],
-          name: "getWinningBid",
-          outputs: [
-            {
-              components: [
-                {
-                  internalType: "uint256",
-                  name: "amount",
-                  type: "uint256",
-                },
-                {
-                  internalType: "address",
-                  name: "bidder",
-                  type: "address",
-                },
-              ],
-              internalType: "struct LUBA.Bid",
-              name: "",
-              type: "tuple",
+              internalType: "address",
+              name: "creator",
+              type: "address",
             },
           ],
           stateMutability: "view",
@@ -282,6 +264,37 @@ const deployedContracts = {
             },
           ],
           name: "readYourBids",
+          outputs: [
+            {
+              components: [
+                {
+                  internalType: "uint256",
+                  name: "amount",
+                  type: "uint256",
+                },
+                {
+                  internalType: "address",
+                  name: "bidder",
+                  type: "address",
+                },
+              ],
+              internalType: "struct LUBA.Bid[]",
+              name: "",
+              type: "tuple[]",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "auctionId",
+              type: "uint256",
+            },
+          ],
+          name: "revealBids",
           outputs: [
             {
               components: [
@@ -365,7 +378,7 @@ const deployedContracts = {
       inheritedFunctions: {},
     },
     USDC: {
-      address: "0xda0a85E3fe5a919aF72225586620630EDAbA2F46",
+      address: "0x1797b88041A4fE9c5702deE70CD578Eaa18d7b62",
       abi: [
         {
           inputs: [],

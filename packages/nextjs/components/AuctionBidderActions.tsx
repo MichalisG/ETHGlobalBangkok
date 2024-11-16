@@ -1,10 +1,11 @@
 "use client";
 
-import { useAccount } from "wagmi";
-import { useReadContract } from "wagmi";
+import { useAccount, useReadContract } from "wagmi";
+import { useReadContractm, useWriteContract } from "wagmi";
 import AuctionField from "~~/components/AuctionField";
 import { Badge } from "~~/components/ui/badge";
 import deployedContracts from "~~/contracts/deployedContracts";
+import { formatEther, parseEther } from "viem";
 
 const fromWei = (value: bigint) => {
   return Number(value) / 10 ** 18;
@@ -22,6 +23,31 @@ export default function AuctionBidderActions({ auctionId }: { auctionId: string 
       select: bids => bids.map(bid => bid.amount),
     },
   });
+
+  const { data: auctionData, isPending: isAuctionLoading } = useReadContract({
+    address: deployedContracts[23295].LUBA.address,
+    abi: deployedContracts[23295].LUBA.abi,
+    functionName: "getPublicAuctionData",
+    args: [BigInt(auctionId as string)],
+  });
+
+  const [endTime, biddingUnit, bidsCount, creator] = auctionData || [];
+
+  const { writeContract: makeBid, error } = useWriteContract();
+
+  const bid = async (multiplier: number) => {
+    try {
+      await makeBid({
+        address: deployedContracts[23295].LUBA.address,
+        abi: deployedContracts[23295].LUBA.abi,
+        functionName: "placeBid",
+        args: [BigInt(auctionId), BigInt(multiplier)],
+        __mode: "prepared",
+      });
+    } catch (error) {
+      console.error("Error making bid:", error);
+    }
+  };
 
   if (isPersonalBidsLoading) {
     return <div>Loading...</div>;
@@ -69,7 +95,7 @@ export default function AuctionBidderActions({ auctionId }: { auctionId: string 
 
       <div className="space-y-2">
         <h3 className="text-lg font-semibold">New bid</h3>
-        <AuctionField />
+        {biddingUnit && <AuctionField baseUnit={Number(formatEther(biddingUnit))} onBidSubmit={bid} />}
       </div>
     </div>
   );

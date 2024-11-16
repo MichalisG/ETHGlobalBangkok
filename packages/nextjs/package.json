@@ -19,6 +19,7 @@
     "@oasisprotocol/sapphire-viem-v2": "^2.0.1",
     "@oasisprotocol/sapphire-wagmi-v2": "^2.0.0",
     "@radix-ui/react-alert-dialog": "^1.1.2",
+    "@radix-ui/react-avatar": "^1.1.1",
     "@radix-ui/react-popover": "^1.1.2",
     "@radix-ui/react-separator": "^1.1.0",
     "@radix-ui/react-slot": "^1.1.0",

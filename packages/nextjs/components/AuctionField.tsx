@@ -31,7 +31,7 @@ const AuctionField = ({ baseUnit = 20, onBidSubmit, className }: AuctionFieldPro
             +
           </Button>
         </div>
-        <Button onClick={() => onBidSubmit?.(counter)}>Bid</Button>
+        <Button onClick={() => onBidSubmit?.(Math.round(counter / baseUnit))}>Bid</Button>
       </div>
       <p className="text-sm text-muted-foreground">Base unit: ${baseUnit} USD.</p>
     </div>

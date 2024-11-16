@@ -45,7 +45,7 @@ const fromWei = (value: bigint) => {
 };
 
 const AuctionCard: FC<AuctionCardProps> = ({ auctionId }) => {
-  const { data: auctionData } = useReadContract({
+  const { data: auctionData, isPending: isAuctionLoading } = useReadContract({
     address: deployedContracts[23295].LUBA.address,
     abi: deployedContracts[23295].LUBA.abi,
     functionName: "getPublicAuctionData",
@@ -79,9 +79,7 @@ const AuctionCard: FC<AuctionCardProps> = ({ auctionId }) => {
             </div>
           </div> */}
           <hr className="border border-gray-200 my-8" />
-          <CardDescription>
-            {endTime && <AuctionState endTime={BigInt(new Date(2032, 8 - 1, 23).getTime() / 1000)} />}
-          </CardDescription>
+          <CardDescription>{endTime && <AuctionState endTime={endTime} />}</CardDescription>
         </CardContent>
       </Card>
     </Link>
