@@ -13,7 +13,7 @@ describe("LUBA Contract", function () {
   let bidder1: HardhatEthersSigner;
   let bidder2: HardhatEthersSigner;
 
-  before(async () => {
+  beforeEach(async () => {
     [owner, bidder1, bidder2] = await ethers.getSigners();
     const lubaFactory = await ethers.getContractFactory("LUBA");
     const usdcFactory = await ethers.getContractFactory("USDC");
@@ -45,11 +45,21 @@ describe("LUBA Contract", function () {
   };
 
   describe("Auction Creation", function () {
-    it("should allow creating an auction", async function () {
+    it("should allow anyone to create an auction", async function () {
       const futureTime = (await time.latest()) + 3600; // 1 hour from now
       await expect(luba.startAuction(futureTime, biddingUnit))
         .to.emit(luba, "AuctionCreated")
         .withArgs(0, owner.address, futureTime, biddingUnit);
+    });
+
+    it("should not allow creating an auction in the past", async function () {
+      const pastTime = (await time.latest()) - 3600; // 1 hour ago
+      await expect(luba.startAuction(pastTime, biddingUnit)).to.be.revertedWith("End time must be in the future");
+    });
+
+    it("should not allow creating an auction with a bidding unit of 0", async function () {
+      const futureTime = (await time.latest()) + 3600; // 1 hour from now
+      await expect(luba.startAuction(futureTime, 0n)).to.be.revertedWith("Bidding unit must be greater than 0");
     });
   });
 
@@ -68,15 +78,16 @@ describe("LUBA Contract", function () {
         .withArgs(auctionId, bidder1.address);
     });
 
-    it("should place duplicate bids", async function () {
+    it("should allow placing duplicate bids", async function () {
       await addBiddingBalance(bidder1, biddingUnit * 10000n);
       await addBiddingBalance(bidder2, biddingUnit * 10000n);
 
       await luba.connect(bidder1).placeBid(auctionId, 11n);
       await luba.connect(bidder2).placeBid(auctionId, 11n);
 
-      const bidsCount = await luba.readBidsCount(auctionId);
-      expect(bidsCount).to.equal(2);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const [_, __, bidsCount] = await luba.getPublicAuctionData(auctionId);
+      expect(bidsCount).to.equal(2n);
 
       const bids = await luba.connect(bidder1).readYourBids(auctionId);
       expect(bids.length).to.equal(1);
@@ -99,25 +110,28 @@ describe("LUBA Contract", function () {
         "Auction has ended or not existing",
       );
     });
+  });
 
-    describe("Bid Reading", function () {
-      let auctionId: number;
+  describe("Bid Reading", function () {
+    let auctionId: number;
 
-      beforeEach(async function () {
-        auctionId = await createAuction();
-      });
+    beforeEach(async function () {
+      auctionId = await createAuction();
+    });
 
-      it("should allow reading your own bids", async function () {
-        await luba.connect(bidder1).placeBid(auctionId, 11n);
-        await luba.connect(bidder1).placeBid(auctionId, 22n);
+    it("should allow reading your own bids", async function () {
+      await addBiddingBalance(bidder1, biddingUnit * 10000n);
+      await addBiddingBalance(bidder2, biddingUnit * 10000n);
 
-        await luba.connect(bidder2).placeBid(auctionId, 22n);
+      await luba.connect(bidder1).placeBid(auctionId, 11n);
+      await luba.connect(bidder1).placeBid(auctionId, 22n);
 
-        const bids = await luba.connect(bidder1).readYourBids(auctionId);
-        expect(bids.length).to.equal(2);
-        expect(bids[0].amount).to.equal(11n * biddingUnit);
-        expect(bids[1].amount).to.equal(22n * biddingUnit);
-      });
+      await luba.connect(bidder2).placeBid(auctionId, 22n);
+
+      const bids = await luba.connect(bidder1).readYourBids(auctionId);
+      expect(bids.length).to.equal(2);
+      expect(bids[0].amount).to.equal(11n * biddingUnit);
+      expect(bids[1].amount).to.equal(22n * biddingUnit);
     });
   });
 
@@ -154,6 +168,152 @@ describe("LUBA Contract", function () {
 
       const winningBid = luba.getWinningBid(auctionId);
       await expect(winningBid).to.be.revertedWith("Auction has not ended yet");
+    });
+  });
+
+  describe("Withdrawal", function () {
+    let auctionId: number;
+
+    beforeEach(async function () {
+      auctionId = await createAuction();
+    });
+
+    it("should allow the creator to withdraw the auction", async function () {
+      await addBiddingBalance(bidder1, biddingUnit * 10000n);
+      await addBiddingBalance(bidder2, biddingUnit * 10000n);
+
+      await luba.connect(bidder1).placeBid(auctionId, 11n);
+      await luba.connect(bidder2).placeBid(auctionId, 11n);
+      await luba.connect(bidder2).placeBid(auctionId, 22n);
+
+      await hre.network.provider.send("evm_increaseTime", [1_000_000]);
+      await hre.network.provider.send("evm_mine", []);
+
+      const [totalBidAmount] = await luba.connect(owner).getCreatorAuctionData(auctionId);
+
+      const balanceBeforeWithdrawal = await usdc.balanceOf(owner);
+      await luba.connect(owner).withdrawBidPool(auctionId);
+
+      const balanceAfterWithdrawal = await usdc.balanceOf(owner);
+      expect(balanceAfterWithdrawal).to.be.greaterThan(balanceBeforeWithdrawal);
+      expect(balanceAfterWithdrawal).to.equal(balanceBeforeWithdrawal + totalBidAmount);
+    });
+
+    it("should not allow the creator to withdraw the auction if the auction has not ended", async function () {
+      await addBiddingBalance(bidder1, biddingUnit * 10000n);
+      await addBiddingBalance(bidder2, biddingUnit * 10000n);
+
+      await luba.connect(bidder1).placeBid(auctionId, 11n);
+      await luba.connect(bidder2).placeBid(auctionId, 11n);
+      await luba.connect(bidder2).placeBid(auctionId, 22n);
+
+      await expect(luba.connect(owner).withdrawBidPool(auctionId)).to.be.revertedWith("Auction has not ended yet");
+    });
+
+    it("should not allow the creator to withdraw the auction if the tokens have already been withdrawn", async function () {
+      await addBiddingBalance(bidder1, biddingUnit * 10000n);
+      await addBiddingBalance(bidder2, biddingUnit * 10000n);
+
+      await luba.connect(bidder1).placeBid(auctionId, 11n);
+      await luba.connect(bidder2).placeBid(auctionId, 11n);
+      await luba.connect(bidder2).placeBid(auctionId, 22n);
+
+      await hre.network.provider.send("evm_increaseTime", [1_000_000]);
+      await hre.network.provider.send("evm_mine", []);
+
+      const [totalBidAmount] = await luba.connect(owner).getCreatorAuctionData(auctionId);
+
+      const balanceBeforeWithdrawal = await usdc.balanceOf(owner);
+      await luba.connect(owner).withdrawBidPool(auctionId);
+
+      const balanceAfterWithdrawal = await usdc.balanceOf(owner);
+      expect(balanceAfterWithdrawal).to.be.greaterThan(balanceBeforeWithdrawal);
+      expect(balanceAfterWithdrawal).to.equal(balanceBeforeWithdrawal + totalBidAmount);
+
+      await expect(luba.connect(owner).withdrawBidPool(auctionId)).to.be.revertedWith("Tokens already withdrawn");
+    });
+  });
+
+  describe("Auction Data", function () {
+    let auctionId: number;
+
+    beforeEach(async function () {
+      auctionId = await createAuction();
+    });
+
+    it("should return public auction data", async function () {
+      const auctionData = await luba.getPublicAuctionData(auctionId);
+      expect(auctionData.endTime).to.be.greaterThan(0);
+      expect(auctionData.biddingUnit).to.equal(biddingUnit);
+      expect(auctionData.bidsCount).to.equal(0);
+
+      await addBiddingBalance(bidder1, biddingUnit * 10000n);
+      await addBiddingBalance(bidder2, biddingUnit * 10000n);
+
+      await luba.connect(bidder1).placeBid(auctionId, 11n);
+      await luba.connect(bidder2).placeBid(auctionId, 11n);
+      await luba.connect(bidder2).placeBid(auctionId, 22n);
+
+      const auctionData2 = await luba.getPublicAuctionData(auctionId);
+      expect(auctionData2.bidsCount).to.equal(3);
+    });
+
+    it("should return creator auction data", async function () {
+      const auctionData = await luba.getCreatorAuctionData(auctionId);
+      expect(auctionData.totalBidAmount).to.equal(0);
+      expect(auctionData.numberOfBids).to.equal(0);
+      expect(auctionData.withdrawn).to.equal(false);
+
+      await addBiddingBalance(bidder1, biddingUnit * 10000n);
+      await addBiddingBalance(bidder2, biddingUnit * 10000n);
+
+      await luba.connect(bidder1).placeBid(auctionId, 11n);
+      await luba.connect(bidder2).placeBid(auctionId, 11n);
+      await luba.connect(bidder2).placeBid(auctionId, 22n);
+
+      const auctionData2 = await luba.getCreatorAuctionData(auctionId);
+      expect(auctionData2.totalBidAmount).to.equal(44n * biddingUnit);
+      expect(auctionData2.numberOfBids).to.equal(3);
+      expect(auctionData2.withdrawn).to.equal(false);
+
+      await hre.network.provider.send("evm_increaseTime", [1_000_000]);
+      await hre.network.provider.send("evm_mine", []);
+
+      await luba.connect(owner).withdrawBidPool(auctionId);
+
+      const auctionData3 = await luba.getCreatorAuctionData(auctionId);
+      expect(auctionData3.withdrawn).to.equal(true);
+    });
+  });
+
+  describe("Bidder Balance", function () {
+    let auctionId: number;
+
+    beforeEach(async function () {
+      auctionId = await createAuction();
+    });
+
+    it("should allow reading the balance of a bidder", async function () {
+      const wantedBalance = biddingUnit * 10000n;
+      await addBiddingBalance(bidder1, wantedBalance);
+      const balance = await luba.connect(bidder1).getPersonalBalance();
+      expect(balance).to.equal(wantedBalance);
+    });
+
+    it("should allow withdrawing the balance of a bidder", async function () {
+      const wantedBalance = biddingUnit * 10000n;
+      await addBiddingBalance(bidder1, wantedBalance);
+      await luba.connect(bidder1).withdrawBalance();
+      const balance = await luba.connect(bidder1).getPersonalBalance();
+      expect(balance).to.equal(0);
+    });
+
+    it("should subtract the balance when placing a bid", async function () {
+      const wantedBalance = biddingUnit * 10000n;
+      await addBiddingBalance(bidder1, wantedBalance);
+      await luba.connect(bidder1).placeBid(auctionId, 11n);
+      const balance = await luba.connect(bidder1).getPersonalBalance();
+      expect(balance).to.equal(wantedBalance - 11n * biddingUnit);
     });
   });
 });

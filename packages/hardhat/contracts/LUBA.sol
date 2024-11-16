@@ -47,6 +47,9 @@ contract LUBA {
   }
 
   function startAuction(uint256 endTime, uint256 biddingUnit) public {
+    require(endTime > block.timestamp, "End time must be in the future");
+    require(biddingUnit > 0, "Bidding unit must be greater than 0");
+
     auctions.push();
     uint256 newAuctionId = auctions.length - 1;
     Auction storage newAuction = auctions[newAuctionId];
@@ -96,10 +99,6 @@ contract LUBA {
     return bids;
   }
 
-  function readBidsCount(uint256 auctionId) public view returns (uint256) {
-    return auctions[auctionId].bids.length;
-  }
-
   function getWinningBid(uint256 auctionId) public view returns (Bid memory) {
     require(auctions[auctionId].endTime < block.timestamp, "Auction has not ended yet");
 
@@ -107,7 +106,7 @@ contract LUBA {
   }
 
   // New function to withdraw tokens after auction ends
-  function withdrawTokens(uint256 auctionId) public {
+  function withdrawBidPool(uint256 auctionId) public {
     Auction storage auction = auctions[auctionId];
     require(msg.sender == auction.creator, "Only auction creator can withdraw");
     require(auction.endTime < block.timestamp, "Auction has not ended yet");
@@ -124,11 +123,22 @@ contract LUBA {
     userBalances[msg.sender] += amount;
   }
 
+  function withdrawBalance() public {
+    require(userBalances[msg.sender] > 0, "No balance to withdraw");
+
+    bidToken.transfer(msg.sender, userBalances[msg.sender]);
+    userBalances[msg.sender] = 0;
+  }
+
+  function getPersonalBalance() public view returns (uint256) {
+    return userBalances[msg.sender];
+  }
+
   function auctionsLength() public view returns (uint256) {
     return auctions.length;
   }
 
-  function getAuction(uint256 auctionId) public view returns (
+  function getPublicAuctionData(uint256 auctionId) public view returns (
     uint256 endTime,
     uint256 biddingUnit,
     uint256 bidsCount
@@ -138,7 +148,7 @@ contract LUBA {
     return (auction.endTime, auction.biddingUnit, auction.bids.length);
   }
 
-  function getAuctionAdminData(uint256 auctionId) public view returns (
+  function getCreatorAuctionData(uint256 auctionId) public view returns (
     uint256 totalBidAmount,
     uint256 numberOfBids,
     bool withdrawn
