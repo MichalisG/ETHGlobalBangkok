@@ -61,6 +61,12 @@ contract LUBA {
     emit AuctionCreated(newAuctionId, msg.sender, endTime, biddingUnit);
   }
 
+  function endAuction(uint256 auctionId) public {
+    require(msg.sender == auctions[auctionId].creator, "Only auction creator can end it");
+
+    auctions[auctionId].endTime = block.timestamp;
+  }
+
   function placeBid(uint256 auctionId, uint256 multiplier) public {
     require(auctions[auctionId].endTime > block.timestamp, "Auction has ended or not existing");
     uint256 amount = multiplier * auctions[auctionId].biddingUnit;
