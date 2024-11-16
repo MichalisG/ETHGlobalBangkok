@@ -9,6 +9,7 @@ import "solidity-coverage";
 import "@nomicfoundation/hardhat-verify";
 import "hardhat-deploy";
 import "hardhat-deploy-ethers";
+import "@oasisprotocol/sapphire-hardhat";
 
 // If not set, it uses the hardhat account 0 private key.
 const deployerPrivateKey =
@@ -120,6 +121,14 @@ const config: HardhatUserConfig = {
     pgnTestnet: {
       url: "https://sepolia.publicgoods.network",
       accounts: [deployerPrivateKey],
+    },
+    'sapphire-testnet': {
+      // This is Testnet! If you want Mainnet, add a new network config item.
+      url: "https://testnet.sapphire.oasis.io",
+      accounts: deployerPrivateKey
+        ? [deployerPrivateKey]
+        : [],
+      chainId: 0x5aff,
     },
   },
   // configuration for harhdat-verify plugin
