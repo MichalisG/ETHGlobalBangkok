@@ -22,7 +22,7 @@ const deployYourContract: DeployFunction = async function (hre: HardhatRuntimeEn
   const { deployer } = await hre.getNamedAccounts();
   const { deploy } = hre.deployments;
 
-  await deploy("Vigil", {
+  await deploy("USDC", {
     from: deployer,
     // Contract constructor arguments
     args: [],
@@ -33,13 +33,28 @@ const deployYourContract: DeployFunction = async function (hre: HardhatRuntimeEn
   });
 
   // Get the deployed contract to interact with it after deploying.
-  const vigil = await hre.ethers.getContract<Contract>("Vigil", deployer);
+  const usdc = await hre.ethers.getContract<Contract>("USDC", deployer);
 
-  console.log("Vigil deployed to:", await vigil.getAddress());
+  const usdcAddr = await usdc.getAddress();
+
+  await deploy("LUBA", {
+    from: deployer,
+    // Contract constructor arguments
+    args: [usdcAddr],
+    log: true,
+    // autoMine: can be passed to the deploy function to make the deployment process faster on local networks by
+    // automatically mining the contract deployment transaction. There is no effect on live networks.
+    autoMine: true,
+  });
+
+  // Get the deployed contract to interact with it after deploying.
+  const vigil = await hre.ethers.getContract<Contract>("LUBA", deployer);
+
+  console.log("LUBA deployed to:", await vigil.getAddress());
 };
 
 export default deployYourContract;
 
 // Tags are useful if you have multiple deploy files and only want to run one of them.
-// e.g. yarn deploy --tags YourContract
-deployYourContract.tags = ["YourContract"];
+// e.g. yarn deploy --tags LUBA
+deployYourContract.tags = ["LUBA"];
