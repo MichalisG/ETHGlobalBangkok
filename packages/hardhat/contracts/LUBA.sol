@@ -1,25 +1,43 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
+import "hardhat/console.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/utils/cryptography/EIP712.sol";
+
+struct SignatureRSV {
+    bytes32 r;
+    bytes32 s;
+    uint256 v;
+}
 
 // this is a LUBA (Lowest Unique Bid Auction).
 
 // it is a simple auction where the lowest unique (or first) bid is the winner.
 
-contract LUBA {
+contract LUBA is EIP712 {
   IERC20 public bidToken;
+
+  bytes32 public constant EIP712_DOMAIN_TYPEHASH = keccak256("EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)");
+  bytes32 public constant SIGNIN_TYPEHASH = keccak256("SignIn(address user,uint32 time)");
+  // bytes32 public immutable DOMAIN_SEPARATOR;
 
   struct Bid {
     uint256 amount;
     address bidder;
   }
 
+  struct SignIn {
+    address user;
+    uint32 time;
+    SignatureRSV rsv;
+  }
+
   struct Auction {
     address creator;
     uint256 endTime;
     uint256 biddingUnit; // the smallest amount that can be bid. every bid must be a multiple of this amount.
-    Bid[]bids;
+    Bid[] bids;
     mapping(address => uint256[]) bidsByBidder;
     uint256 totalBidAmount;
     bool withdrawn;
@@ -41,9 +59,32 @@ contract LUBA {
 
   Auction[] public auctions;
 
-  constructor(address _bidToken) {
+  constructor(address _bidToken) EIP712("LUBA.SignIn", "1.0") {
     bidToken = IERC20(_bidToken);
   }
+
+  function recoverValidSigner(SignIn calldata auth) public view returns (address) {
+    // Must be signed within 24 hours ago.
+    require( auth.time > (block.timestamp - (60*60*24)) );
+
+    bytes32 digest = _hashTypedDataV4(keccak256(abi.encode(
+        SIGNIN_TYPEHASH,
+        auth.user,
+        auth.time
+    )));
+
+    address recovered_address = ecrecover(digest, uint8(auth.rsv.v), auth.rsv.r, auth.rsv.s);
+
+    return recovered_address;
+  }
+
+   modifier authenticated(SignIn calldata auth) {
+        address recovered_address = recoverValidSigner(auth);
+
+        require( auth.user == recovered_address, "Invalid Sign-In" );
+
+        _;
+    }
 
   function startAuction(uint256 endTime, uint256 biddingUnit) public {
     require(endTime > block.timestamp, "End time must be in the future");
@@ -78,8 +119,10 @@ contract LUBA {
     emit BidPlaced(auctionId, msg.sender);
   }
 
-  function readYourBids(uint256 auctionId) public view returns (Bid[] memory) {
-    uint256[] memory bidIds = auctions[auctionId].bidsByBidder[msg.sender];
+  function readYourBids(uint256 auctionId, SignIn calldata auth) public view returns (Bid[] memory) {
+    address requester = recoverValidSigner(auth);
+    console.log("requester", requester);
+    uint256[] memory bidIds = auctions[auctionId].bidsByBidder[requester];
 
     Bid[] memory bids = new Bid[](bidIds.length);
     for (uint256 i = 0; i < bidIds.length; i++) {
@@ -119,8 +162,10 @@ contract LUBA {
     userBalances[msg.sender] = 0;
   }
 
-  function getPersonalBalance() public view returns (uint256) {
-    return userBalances[msg.sender];
+  function getPersonalBalance(SignIn calldata auth) public view returns (uint256) {
+    address user = recoverValidSigner(auth);
+
+    return userBalances[user];
   }
 
   function auctionsLength() public view returns (uint256) {
@@ -138,12 +183,13 @@ contract LUBA {
     return (auction.endTime, auction.biddingUnit, auction.bids.length, auction.creator);
   }
 
-  function getCreatorAuctionData(uint256 auctionId) public view returns (
+  function getCreatorAuctionData(uint256 auctionId, SignIn calldata auth) public view returns (
     uint256 totalBidAmount,
     uint256 numberOfBids,
     bool withdrawn
   ) {
-    require(msg.sender == auctions[auctionId].creator, "Only auction creator can access this data");
+    address requester = recoverValidSigner(auth);
+    require(requester == auctions[auctionId].creator, "Only auction creator can access this data");
 
     Auction storage auction = auctions[auctionId];
 
