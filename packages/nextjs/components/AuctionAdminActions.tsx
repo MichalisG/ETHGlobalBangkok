@@ -32,10 +32,6 @@ export default function AuctionAdminActions(props: { auctionId: string }) {
 
   const { writeContract: closeAuction, isPending: isClosingAuction } = useWriteContract();
 
-  if (!isAuctionLoading && !isAdminLoading) {
-    return <div>Loading...</div>;
-  }
-
   if (!connectedAddress) {
     return <div>Please connect your wallet to view this auction</div>;
   }
