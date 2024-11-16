@@ -30,12 +30,7 @@ export default function AuctionAdminActions(props: { auctionId: string }) {
     },
   });
 
-  const { writeContract, isPending: isClosingAuction } = useWriteContract({
-    address: deployedContracts[23295].LUBA.address,
-    abi: deployedContracts[23295].LUBA.abi,
-    functionName: "closeAuction",
-    args: [BigInt(auctionId as string)],
-  });
+  const { writeContract: closeAuction, isPending: isClosingAuction } = useWriteContract();
 
   if (!isAuctionLoading && !isAdminLoading) {
     return <div>Loading...</div>;
@@ -47,19 +42,33 @@ export default function AuctionAdminActions(props: { auctionId: string }) {
 
   const [totalBidAmount, numberOfBids = 2, withdrawn] = adminData || [];
 
+  const hasEnded = Number(endTime) < Date.now() / 1000;
+
+  const handleCloseAuction = async () => {
+    await closeAuction({
+      address: deployedContracts[23295].LUBA.address,
+      abi: deployedContracts[23295].LUBA.abi,
+      functionName: "endAuction",
+      args: [BigInt(auctionId as string)],
+      __mode: "prepared",
+    });
+  };
+
   return (
     <div className="flex flex-col justify-between gap-4 h-full">
       <div className="space-y-4">
         <p className="text-muted-foreground">Bids submitted</p>
-        <h1 className="text-4xl font-bold">{numberOfBids}</h1>
+        <h1 className="text-4xl font-bold">{bidsCount?.toString() || "0"}</h1>
       </div>
 
-      <div>
-        <p className="text-muted-foreground">Admin actions</p>
-        <Button variant="destructive" className="w-full my-8" onClick={() => writeContract()}>
-          Close auction
-        </Button>
-      </div>
+      {!hasEnded && (
+        <div>
+          <p className="text-muted-foreground">Admin actions</p>
+          <Button variant="destructive" className="w-full my-8" onClick={handleCloseAuction}>
+            Close auction
+          </Button>
+        </div>
+      )}
     </div>
   );
 }
