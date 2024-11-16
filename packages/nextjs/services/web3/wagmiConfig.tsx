@@ -1,7 +1,7 @@
 import { wagmiConnectors } from "./wagmiConnectors";
 import { injectedWithSapphire, sapphireHttpTransport } from "@oasisprotocol/sapphire-wagmi-v2";
 import { Chain, createClient, fallback, http } from "viem";
-import { hardhat, mainnet, sapphireTestnet } from "viem/chains";
+import { hardhat, mainnet, sapphire, sapphireTestnet } from "viem/chains";
 import { createConfig } from "wagmi";
 import scaffoldConfig from "~~/scaffold.config";
 import { getAlchemyHttpUrl } from "~~/utils/scaffold-eth";
