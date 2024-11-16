@@ -1,7 +1,7 @@
 "use client";
 
 import { useAccount, useReadContract } from "wagmi";
-import { useReadContractm, useWriteContract } from "wagmi";
+import {useWriteContract } from "wagmi";
 import AuctionField from "~~/components/AuctionField";
 import { Badge } from "~~/components/ui/badge";
 import deployedContracts from "~~/contracts/deployedContracts";
