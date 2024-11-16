@@ -1,8 +1,8 @@
 "use client";
 
-import dynamic from "next/dist/shared/lib/dynamic";
 import { useState } from "react";
-import { useWriteContract, useWaitForTransactionReceipt, useAccount } from "wagmi";
+import dynamic from "next/dist/shared/lib/dynamic";
+import { useAccount, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 import deployedContracts from "~~/contracts/deployedContracts";
 import { notification } from "~~/utils/scaffold-eth/notification";
 
@@ -11,7 +11,7 @@ function Faucet() {
   const { address } = useAccount();
 
   const { writeContract, data: hash, isPending, error } = useWriteContract();
-  console.log('🚀 ~ Faucet ~ error:', error)
+  console.log("🚀 ~ Faucet ~ error:", error);
   console.log("🚀 ~ Faucet ~ data:", hash);
   const { isLoading: isTransactionLoading } = useWaitForTransactionReceipt({
     hash,
@@ -20,11 +20,12 @@ function Faucet() {
   const mintTokens = async () => {
     try {
       setLoading(true);
-      writeContract({
+      await writeContract({
         address: deployedContracts[23295].USDC.address,
         abi: deployedContracts[23295].USDC.abi,
         functionName: "mint",
         args: [BigInt(10)],
+        __mode: "prepared",
       });
     } catch (error) {
       console.error("Error minting tokens:", error);
