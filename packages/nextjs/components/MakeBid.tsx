@@ -12,7 +12,6 @@ export const MakeBid = ({ auctionId, biddingUnit }: MakeBidProps) => {
   const [bidAmount, setBidAmount] = useState("");
 
   const { writeContract: makeBid, error } = useWriteContract();
-  console.log("🚀 ~ MakeBid ~ error:", error);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -47,4 +46,4 @@ export const MakeBid = ({ auctionId, biddingUnit }: MakeBidProps) => {
   );
 };
 
-export default AuctionField;
+export default MakeBid;

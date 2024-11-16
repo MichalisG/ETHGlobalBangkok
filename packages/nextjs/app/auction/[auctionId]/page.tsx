@@ -105,7 +105,7 @@ export default function AuctionPage() {
               <img src={AUCTION_PLACEHOLDER_DATA[Number(auctionId) % AUCTION_PLACEHOLDER_DATA.length].image.src} />
             </div>
             <div className="flex-1">
-              {!isAdmin ? (
+              {isAdmin ? (
                 <AuctionAdminActions auctionId={auctionId as string} />
               ) : (
                 <AuctionBidderActions auctionId={auctionId as string} />

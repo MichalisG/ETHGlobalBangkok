@@ -2,20 +2,38 @@ import { FC, useEffect, useState } from "react";
 import { formatEther, parseEther } from "viem";
 import { useReadContract, useWriteContract } from "wagmi";
 import deployedContracts from "~~/contracts/deployedContracts";
-import { useEIP712SignIn } from "~~/hooks/useEIP712SignIn";
+// import { useEIP712SignIn } from "~~/hooks/useEIP712SignIn";
 
 const Balance: FC<{ connectedAddress: string }> = ({ connectedAddress }) => {
   const [amount, setAmount] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const { signIn } = useEIP712SignIn();
+  // const { signIn } = useEIP712SignIn();
+
+  // useEffect(() => {
+  //   if (connectedAddress) {
+  //     signIn({ connectedAddress, time: new Date().getTime() });
+  //   }
+  // }, [signIn, connectedAddress]);
 
   useEffect(() => {
-    if (connectedAddress) {
-      signIn({ connectedAddress, time: new Date().getTime() });
-    }
-  }, [signIn, connectedAddress]);
+    const handleClickOutside = (event: MouseEvent) => {
+      const modal = document.getElementById("my_modal_1");
+      if (modal && !modal.contains(event.target as Node)) {
+        setIsModalOpen(false);
+      }
+    };
 
+    if (isModalOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isModalOpen]);
 
   const { data: balance, isPending: isBalanceLoading, error: balanceError } = useReadContract({
     address: deployedContracts[23295].LUBA.address,
@@ -70,29 +88,30 @@ const Balance: FC<{ connectedAddress: string }> = ({ connectedAddress }) => {
 
   return (
     <div className="bg-white p-4 rounded-lg shadow-md border border-gray-200">
-      Balance: {balance !== undefined ? formatEther(balance) : "loading..."}
-      <button className="btn btn-secondary" onClick={() => setIsModalOpen(true)}>
-        Deposit
-      </button>
-      <button className="btn btn-primary" onClick={handleWithdraw}>
-        Withdraw
-      </button>
+      <div className="flex justify-between cursor-pointer p-2" onClick={() => setIsModalOpen(true)}>
+        Balance: {balance !== undefined ? formatEther(balance) : "loading..."}
+      </div>
       <dialog id="my_modal_1" className="modal" open={isModalOpen}>
-        <div className="modal-box">
+        <div className="modal-box bg-white shadow-xl border border-gray-200 min-w-96 p-4 rounded-lg flex flex-col gap-4">
           <h3 className="font-bold text-lg">Enter Amount</h3>
           <input
             type="number"
             value={amount}
             onChange={e => setAmount(Number(e.target.value))}
-            className="input input-bordered w-full max-w-xs"
+            className="input input-bordered w-full max-w-xs border-gray-300"
           />
           <div className="modal-action">
-            <button className="btn" onClick={() => setIsModalOpen(false)}>
-              Close
-            </button>
-            <button className="btn" onClick={handleDeposit} disabled={isApproving || isDepositing}>
-              Deposit
-            </button>
+            <div className="flex justify-between">
+              <button className="btn" onClick={() => setIsModalOpen(false)}>
+                Close
+              </button>
+              <button className="btn" onClick={handleDeposit} disabled={isApproving || isDepositing}>
+                Deposit
+              </button>
+              <button className="btn btn-primary" onClick={handleWithdraw}>
+                Withdraw
+              </button>
+            </div>
           </div>
         </div>
       </dialog>
