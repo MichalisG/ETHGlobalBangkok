@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { FC } from "react";
-import HeroImage from "~~/public/hero.webp";
 
 interface HeroProps {
   title?: string;
@@ -16,7 +15,6 @@ const Hero: FC<HeroProps> = ({
   description = "Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.",
   buttonText = "Get Started",
   subtitle = "Where Privacy Meets Transparency in Auctions",
-  backgroundImage = HeroImage.src,
   onButtonClick = () => {},
 }) => {
   return (
