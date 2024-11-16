@@ -19,9 +19,8 @@ contract LUBA {
     address creator;
     uint256 endTime;
     uint256 biddingUnit; // the smallest amount that can be bid. every bid must be a multiple of this amount.
-    Bid[] bids;
+    Bid[]bids;
     mapping(address => uint256[]) bidsByBidder;
-    uint256 currentLowestBidIndex;
     uint256 totalBidAmount;
     bool withdrawn;
   }
@@ -66,8 +65,6 @@ contract LUBA {
     require(auctions[auctionId].endTime > block.timestamp, "Auction has ended or not existing");
     uint256 amount = multiplier * auctions[auctionId].biddingUnit;
 
-    require(userBalances[msg.sender] >= amount, "Insufficient balance");
-
     Auction storage auction = auctions[auctionId];
 
     // Update total bid amount
@@ -77,14 +74,6 @@ contract LUBA {
     auction.bids.push(Bid(amount, msg.sender));
 
     auction.bidsByBidder[msg.sender].push(auction.bids.length - 1); // store the index of the bid
-
-    // update the current lowest bid index if the new bid is lower
-    Bid memory currentLowestBid = auction.bids[auction.currentLowestBidIndex];
-    if (amount < currentLowestBid.amount || currentLowestBid.amount == 0) {
-      auction.currentLowestBidIndex = auction.bids.length - 1;
-    }
-
-    userBalances[msg.sender] -= amount;
 
     emit BidPlaced(auctionId, msg.sender);
   }
@@ -99,10 +88,10 @@ contract LUBA {
     return bids;
   }
 
-  function getWinningBid(uint256 auctionId) public view returns (Bid memory) {
+  function revealBids(uint256 auctionId) public view returns (Bid[] memory) {
     require(auctions[auctionId].endTime < block.timestamp, "Auction has not ended yet");
 
-    return auctions[auctionId].bids[auctions[auctionId].currentLowestBidIndex];
+    return auctions[auctionId].bids;
   }
 
   // New function to withdraw tokens after auction ends
