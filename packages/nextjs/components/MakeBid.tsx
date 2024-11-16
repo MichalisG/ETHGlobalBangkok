@@ -1,39 +1,48 @@
 import { useState } from "react";
-import { cn } from "../lib/utils";
-import { Button } from "./ui/button";
-import { Input } from "./ui/input";
+import { formatEther } from "viem";
+import { useWriteContract } from "wagmi";
+import deployedContracts from "~~/contracts/deployedContracts";
 
-interface AuctionFieldProps {
-  baseUnit?: number;
-  onBidSubmit?: (amount: number) => void;
-  className?: string;
+interface MakeBidProps {
+  auctionId: string;
+  biddingUnit: string;
 }
 
-const AuctionField = ({ baseUnit = 20, onBidSubmit, className }: AuctionFieldProps) => {
-  const [counter, setCounter] = useState(baseUnit);
+export const MakeBid = ({ auctionId, biddingUnit }: MakeBidProps) => {
+  const [bidAmount, setBidAmount] = useState("");
 
-  const increment = () => setCounter(prev => prev + baseUnit);
-  const decrement = () => {
-    if (counter > baseUnit) {
-      setCounter(prev => prev - baseUnit);
+  const { writeContract: makeBid, error } = useWriteContract();
+  console.log("🚀 ~ MakeBid ~ error:", error);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      await makeBid({
+        address: deployedContracts[23295].LUBA.address,
+        abi: deployedContracts[23295].LUBA.abi,
+        functionName: "placeBid",
+        args: [BigInt(auctionId), BigInt(Number(bidAmount) / Number(formatEther(BigInt(biddingUnit))))],
+        __mode: "prepared",
+      });
+    } catch (error) {
+      console.error("Error making bid:", error);
     }
   };
 
   return (
-    <div className={cn("flex flex-col gap-2", className)}>
-      <div className="flex items-center gap-2">
-        <div className="flex items-center">
-          <Button variant="outline" size="icon" onClick={decrement} className="rounded-r-none">
-            -
-          </Button>
-          <Input type="text" value={`$${counter}`} readOnly className="rounded-none text-center w-24 border-x-0" />
-          <Button variant="outline" size="icon" onClick={increment} className="rounded-l-none">
-            +
-          </Button>
-        </div>
-        <Button onClick={() => onBidSubmit?.(counter)}>Bid</Button>
-      </div>
-      <p className="text-sm text-muted-foreground">Base unit: ${baseUnit} USD.</p>
+    <div className="flex flex-col gap-4 p-4 bg-base-200 rounded-lg">
+      <h3 className="text-lg font-bold">Make a Bid</h3>
+      <input
+        type="number"
+        step={formatEther(BigInt(biddingUnit))}
+        value={bidAmount}
+        onChange={e => setBidAmount(e.target.value)}
+        placeholder="Enter bid amount"
+        className="input input-bordered"
+      />
+      <button type="submit" className="btn btn-primary" onClick={handleSubmit}>
+        Place Bid
+      </button>
     </div>
   );
 };

@@ -32,6 +32,7 @@ const NewAuction = () => {
       abi: deployContracts[23295].LUBA.abi,
       functionName: "startAuction",
       args: [BigInt(Math.floor(endTime.getTime() / 1000)), BigInt(toWei(biddingUnit))],
+      __mode: "prepared",
     });
   };
 

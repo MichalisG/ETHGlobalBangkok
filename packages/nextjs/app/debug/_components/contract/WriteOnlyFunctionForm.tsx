@@ -51,6 +51,7 @@ export const WriteOnlyFunctionForm = ({
             abi: abi,
             args: getParsedContractFunctionArgs(form),
             value: BigInt(txValue),
+            __mode: "prepared",
           });
         await writeTxn(makeWriteWithParams);
         onChange();
