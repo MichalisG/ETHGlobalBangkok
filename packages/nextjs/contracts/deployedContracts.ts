@@ -7,7 +7,7 @@ import { GenericContractsDeclaration } from "~~/utils/scaffold-eth/contract";
 const deployedContracts = {
   23295: {
     LUBA: {
-      address: "0xFdC838454Dfd2ED507f5CC24A9B610FA6cf5639a",
+      address: "0x4c3E6Bae0768a2d34E15E68eFf7146F19b536AEc",
       abi: [
         {
           inputs: [
@@ -19,6 +19,22 @@ const deployedContracts = {
           ],
           stateMutability: "nonpayable",
           type: "constructor",
+        },
+        {
+          inputs: [],
+          name: "InvalidShortString",
+          type: "error",
+        },
+        {
+          inputs: [
+            {
+              internalType: "string",
+              name: "str",
+              type: "string",
+            },
+          ],
+          name: "StringTooLong",
+          type: "error",
         },
         {
           anonymous: false,
@@ -69,6 +85,38 @@ const deployedContracts = {
           ],
           name: "BidPlaced",
           type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [],
+          name: "EIP712DomainChanged",
+          type: "event",
+        },
+        {
+          inputs: [],
+          name: "EIP712_DOMAIN_TYPEHASH",
+          outputs: [
+            {
+              internalType: "bytes32",
+              name: "",
+              type: "bytes32",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "SIGNIN_TYPEHASH",
+          outputs: [
+            {
+              internalType: "bytes32",
+              name: "",
+              type: "bytes32",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
         },
         {
           inputs: [
@@ -149,6 +197,49 @@ const deployedContracts = {
           type: "function",
         },
         {
+          inputs: [],
+          name: "eip712Domain",
+          outputs: [
+            {
+              internalType: "bytes1",
+              name: "fields",
+              type: "bytes1",
+            },
+            {
+              internalType: "string",
+              name: "name",
+              type: "string",
+            },
+            {
+              internalType: "string",
+              name: "version",
+              type: "string",
+            },
+            {
+              internalType: "uint256",
+              name: "chainId",
+              type: "uint256",
+            },
+            {
+              internalType: "address",
+              name: "verifyingContract",
+              type: "address",
+            },
+            {
+              internalType: "bytes32",
+              name: "salt",
+              type: "bytes32",
+            },
+            {
+              internalType: "uint256[]",
+              name: "extensions",
+              type: "uint256[]",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
           inputs: [
             {
               internalType: "uint256",
@@ -167,6 +258,45 @@ const deployedContracts = {
               internalType: "uint256",
               name: "auctionId",
               type: "uint256",
+            },
+            {
+              components: [
+                {
+                  internalType: "address",
+                  name: "user",
+                  type: "address",
+                },
+                {
+                  internalType: "uint32",
+                  name: "time",
+                  type: "uint32",
+                },
+                {
+                  components: [
+                    {
+                      internalType: "bytes32",
+                      name: "r",
+                      type: "bytes32",
+                    },
+                    {
+                      internalType: "bytes32",
+                      name: "s",
+                      type: "bytes32",
+                    },
+                    {
+                      internalType: "uint256",
+                      name: "v",
+                      type: "uint256",
+                    },
+                  ],
+                  internalType: "struct SignatureRSV",
+                  name: "rsv",
+                  type: "tuple",
+                },
+              ],
+              internalType: "struct LUBA.SignIn",
+              name: "auth",
+              type: "tuple",
             },
           ],
           name: "getCreatorAuctionData",
@@ -191,7 +321,47 @@ const deployedContracts = {
           type: "function",
         },
         {
-          inputs: [],
+          inputs: [
+            {
+              components: [
+                {
+                  internalType: "address",
+                  name: "user",
+                  type: "address",
+                },
+                {
+                  internalType: "uint32",
+                  name: "time",
+                  type: "uint32",
+                },
+                {
+                  components: [
+                    {
+                      internalType: "bytes32",
+                      name: "r",
+                      type: "bytes32",
+                    },
+                    {
+                      internalType: "bytes32",
+                      name: "s",
+                      type: "bytes32",
+                    },
+                    {
+                      internalType: "uint256",
+                      name: "v",
+                      type: "uint256",
+                    },
+                  ],
+                  internalType: "struct SignatureRSV",
+                  name: "rsv",
+                  type: "tuple",
+                },
+              ],
+              internalType: "struct LUBA.SignIn",
+              name: "auth",
+              type: "tuple",
+            },
+          ],
           name: "getPersonalBalance",
           outputs: [
             {
@@ -262,6 +432,45 @@ const deployedContracts = {
               name: "auctionId",
               type: "uint256",
             },
+            {
+              components: [
+                {
+                  internalType: "address",
+                  name: "user",
+                  type: "address",
+                },
+                {
+                  internalType: "uint32",
+                  name: "time",
+                  type: "uint32",
+                },
+                {
+                  components: [
+                    {
+                      internalType: "bytes32",
+                      name: "r",
+                      type: "bytes32",
+                    },
+                    {
+                      internalType: "bytes32",
+                      name: "s",
+                      type: "bytes32",
+                    },
+                    {
+                      internalType: "uint256",
+                      name: "v",
+                      type: "uint256",
+                    },
+                  ],
+                  internalType: "struct SignatureRSV",
+                  name: "rsv",
+                  type: "tuple",
+                },
+              ],
+              internalType: "struct LUBA.SignIn",
+              name: "auth",
+              type: "tuple",
+            },
           ],
           name: "readYourBids",
           outputs: [
@@ -281,6 +490,59 @@ const deployedContracts = {
               internalType: "struct LUBA.Bid[]",
               name: "",
               type: "tuple[]",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              components: [
+                {
+                  internalType: "address",
+                  name: "user",
+                  type: "address",
+                },
+                {
+                  internalType: "uint32",
+                  name: "time",
+                  type: "uint32",
+                },
+                {
+                  components: [
+                    {
+                      internalType: "bytes32",
+                      name: "r",
+                      type: "bytes32",
+                    },
+                    {
+                      internalType: "bytes32",
+                      name: "s",
+                      type: "bytes32",
+                    },
+                    {
+                      internalType: "uint256",
+                      name: "v",
+                      type: "uint256",
+                    },
+                  ],
+                  internalType: "struct SignatureRSV",
+                  name: "rsv",
+                  type: "tuple",
+                },
+              ],
+              internalType: "struct LUBA.SignIn",
+              name: "auth",
+              type: "tuple",
+            },
+          ],
+          name: "recoverValidSigner",
+          outputs: [
+            {
+              internalType: "address",
+              name: "",
+              type: "address",
             },
           ],
           stateMutability: "view",
@@ -375,10 +637,12 @@ const deployedContracts = {
           type: "function",
         },
       ],
-      inheritedFunctions: {},
+      inheritedFunctions: {
+        eip712Domain: "@openzeppelin/contracts/utils/cryptography/EIP712.sol",
+      },
     },
     USDC: {
-      address: "0x1797b88041A4fE9c5702deE70CD578Eaa18d7b62",
+      address: "0x17D6B79e72A898826843E17C2F7275fd51213453",
       abi: [
         {
           inputs: [],
