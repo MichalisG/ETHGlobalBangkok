@@ -64,8 +64,8 @@ export default function AuctionPage() {
           </div>
         </div>
       )}
-      <MakeBid auctionId={auctionId as string} />
-      <Balance />
+      {biddingUnit && <MakeBid auctionId={auctionId as string} biddingUnit={biddingUnit?.toString()} />}
+      <Balance connectedAddress={connectedAddress} />
     </div>
   );
 }
