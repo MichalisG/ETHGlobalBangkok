@@ -1707,6 +1707,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@oasisprotocol/deoxysii@npm:0.0.6":
+  version: 0.0.6
+  resolution: "@oasisprotocol/deoxysii@npm:0.0.6"
+  checksum: 8e07101da102ba82b72c65d6c125e7f0527937928daaab0e050640979fb2d34e122c843280a558973b9f39e8017ee8e940539e3d51346f5fe50c5e3ae57b9db1
+  languageName: node
+  linkType: hard
+
 "@oasisprotocol/sapphire-hardhat@npm:^2.19.4":
   version: 2.19.4
   resolution: "@oasisprotocol/sapphire-hardhat@npm:2.19.4"
@@ -1729,6 +1736,67 @@ __metadata:
     tweetnacl: 1.0.3
     type-fest: 2.19.0
   checksum: de721663cf9025bb16faeb934d898916a8393ceff73decbd4eaccfb8eb6a54fcf07c7348d9d7b32d5a476dc44c37b57c3b48c382b2e6cc9d637dc15467ca3f76
+  languageName: node
+  linkType: hard
+
+"@oasisprotocol/sapphire-paratime@npm:^2.0.0, @oasisprotocol/sapphire-paratime@npm:next":
+  version: 2.0.1
+  resolution: "@oasisprotocol/sapphire-paratime@npm:2.0.1"
+  dependencies:
+    "@noble/hashes": 1.3.2
+    "@oasisprotocol/deoxysii": 0.0.6
+    cborg: 1.10.2
+  checksum: 98a3bca90cb47d4982d36e03c5de74754fd0fc83fecd292611495d2982046be3403bc581cc7afb632f61c67efb0886769c832b5d9de211e5311c73dc27412df1
+  languageName: node
+  linkType: hard
+
+"@oasisprotocol/sapphire-viem-v2@npm:^2.0.1":
+  version: 2.0.1
+  resolution: "@oasisprotocol/sapphire-viem-v2@npm:2.0.1"
+  dependencies:
+    "@oasisprotocol/sapphire-paratime": ^2.0.0
+    viem: ^2.6.9
+  peerDependencies:
+    "@oasisprotocol/sapphire-paratime": ^2.0.0
+    "@wagmi/core": 2.x
+    typescript: ">=5.0.4"
+    viem: ^2.6.9
+  peerDependenciesMeta:
+    "@oasisprotocol/sapphire-paratime":
+      optional: true
+    "@wagmi/core":
+      optional: true
+    typescript:
+      optional: true
+  checksum: edb6679307a80eec881159c24279b5a7ea7e3ce40d487b0cd1aea163b0beace12a2731f10870d403bf33622cfe1c25975242dc570c9b23b293cf3f82cd14bf54
+  languageName: node
+  linkType: hard
+
+"@oasisprotocol/sapphire-wagmi-v2@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "@oasisprotocol/sapphire-wagmi-v2@npm:2.0.0"
+  dependencies:
+    "@oasisprotocol/sapphire-paratime": ^2.0.0
+    "@oasisprotocol/sapphire-viem-v2": ^2.0.1
+    "@wagmi/core": 2.x
+    viem: 2.x
+  peerDependencies:
+    "@oasisprotocol/sapphire-paratime": ^2.0.0
+    "@oasisprotocol/sapphire-viem-v2": ^2.0.1
+    "@wagmi/core": ^2.6.9
+    typescript: ">=5.0.4"
+    viem: 2.x
+    wagmi: 2.x
+  peerDependenciesMeta:
+    "@oasisprotocol/sapphire-paratime":
+      optional: true
+    "@oasisprotocol/sapphire-viem-v2":
+      optional: true
+    "@wagmi/core":
+      optional: true
+    typescript:
+      optional: true
+  checksum: 78a056d433f9330629e1db60223cf8bb7b4ad6dc18ce4a87a079d9385ef1c59a834ce81e42572c6bb616f1a95ced65fbc6add3337d92a2948d0d1e175bbb7c86
   languageName: node
   linkType: hard
 
@@ -2138,6 +2206,9 @@ __metadata:
   resolution: "@se-2/nextjs@workspace:packages/nextjs"
   dependencies:
     "@heroicons/react": ~2.1.5
+    "@oasisprotocol/sapphire-paratime": next
+    "@oasisprotocol/sapphire-viem-v2": ^2.0.1
+    "@oasisprotocol/sapphire-wagmi-v2": ^2.0.0
     "@rainbow-me/rainbowkit": 2.1.6
     "@tanstack/react-query": ~5.59.15
     "@trivago/prettier-plugin-sort-imports": ~4.3.0
@@ -2155,6 +2226,7 @@ __metadata:
     eslint-config-next: ~14.2.15
     eslint-config-prettier: ~8.10.0
     eslint-plugin-prettier: ~5.2.1
+    ethers: ^6.13.4
     next: ~14.2.11
     next-nprogress-bar: ~2.3.13
     next-themes: ~0.3.0
@@ -2163,6 +2235,8 @@ __metadata:
     qrcode.react: ~4.0.1
     react: ~18.3.1
     react-copy-to-clipboard: ~5.1.0
+    react-countdown: ^2.3.6
+    react-datetime-picker: ^6.0.1
     react-dom: ~18.3.1
     react-hot-toast: ~2.4.0
     tailwindcss: ~3.4.11
@@ -3585,6 +3659,26 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@wagmi/core@npm:2.x":
+  version: 2.14.6
+  resolution: "@wagmi/core@npm:2.14.6"
+  dependencies:
+    eventemitter3: 5.0.1
+    mipd: 0.0.7
+    zustand: 5.0.0
+  peerDependencies:
+    "@tanstack/query-core": ">=5.0.0"
+    typescript: ">=5.0.4"
+    viem: 2.x
+  peerDependenciesMeta:
+    "@tanstack/query-core":
+      optional: true
+    typescript:
+      optional: true
+  checksum: 0e4a0f32b81321789a65c85e63d8776da23c7145f56626964113bfbf4488390904a32e09f8492a02384d5481e64f605a3f56afe7c0a60d49763a6127b5feb3e2
+  languageName: node
+  linkType: hard
+
 "@walletconnect/core@npm:2.17.0":
   version: 2.17.0
   resolution: "@walletconnect/core@npm:2.17.0"
@@ -3899,6 +3993,13 @@ __metadata:
     "@walletconnect/window-getters": ^1.0.1
     tslib: 1.14.1
   checksum: e82aea7195c6fe95c00e87bb38051c5549838c2e8302da94f1afa48206f79f0b620166c9820f847494505d282d1568e2086a1561b0493d2d0a1fa115f9106aef
+  languageName: node
+  linkType: hard
+
+"@wojtekmaj/date-utils@npm:^1.1.3, @wojtekmaj/date-utils@npm:^1.5.0":
+  version: 1.5.1
+  resolution: "@wojtekmaj/date-utils@npm:1.5.1"
+  checksum: ba28a0ba107838cabbef0bceccdb748cb4bfa75e7e7cebe8a5f711f475b4bc5e28b7f394cc6e650826fcec232ee98b39d02fe6a5df32e0526d4eca68609bab9a
   languageName: node
   linkType: hard
 
@@ -5182,7 +5283,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"clsx@npm:2.1.1":
+"clsx@npm:2.1.1, clsx@npm:^2.0.0":
   version: 2.1.1
   resolution: "clsx@npm:2.1.1"
   checksum: acd3e1ab9d8a433ecb3cc2f6a05ab95fe50b4a3cfc5ba47abb6cbf3754585fcb87b84e90c822a1f256c4198e3b41c7f6c391577ffc8678ad587fc0976b24fd57
@@ -5755,6 +5856,13 @@ __metadata:
   version: 5.3.0
   resolution: "detect-browser@npm:5.3.0"
   checksum: dd6e08d55da1d9e0f22510ac79872078ae03d9dfa13c5e66c96baedc1c86567345a88f96949161f6be8f3e0fafa93bf179bdb1cd311b14f5f163112fcc70ab49
+  languageName: node
+  linkType: hard
+
+"detect-element-overflow@npm:^1.4.0":
+  version: 1.4.2
+  resolution: "detect-element-overflow@npm:1.4.2"
+  checksum: 102a0bb7f51dbeb546979495b461ebcf4d9dc9d7c0674c519d8a8fdac833a88234d42a9838316f350a05dc835f9ccfb19b1e9f1171b9eb46e8ec27eb8205d258
   languageName: node
   linkType: hard
 
@@ -7025,7 +7133,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ethers@npm:~6.13.2":
+"ethers@npm:^6.13.4, ethers@npm:~6.13.2":
   version: 6.13.4
   resolution: "ethers@npm:6.13.4"
   dependencies:
@@ -7688,6 +7796,15 @@ __metadata:
   dependencies:
     resolve-pkg-maps: ^1.0.0
   checksum: 12df01672e691d2ff6db8cf7fed1ddfef90ed94a5f3d822c63c147a26742026d582acd86afcd6f65db67d809625d17dd7f9d34f4d3f38f69bc2f48e19b2bdd5b
+  languageName: node
+  linkType: hard
+
+"get-user-locale@npm:^2.2.1":
+  version: 2.3.2
+  resolution: "get-user-locale@npm:2.3.2"
+  dependencies:
+    mem: ^8.0.0
+  checksum: 1cbb5527bb7dd102928b5d25f7bb614318c2665b06505d5b46e8c9a4ae8a2f4db55f63b5a2a2d3d63ee6f20d6bf408ac080897552e2976a429411fc05189211b
   languageName: node
   linkType: hard
 
@@ -9524,6 +9641,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"make-event-props@npm:^1.6.0":
+  version: 1.6.2
+  resolution: "make-event-props@npm:1.6.2"
+  checksum: ded823d8b73926d94513416c75585be2cea9d9408b085eed31c20a1005147661a50852f869e1779990ddd04c8e07e1f24c766453cc9b4870bcef8d79c533a5fc
+  languageName: node
+  linkType: hard
+
 "make-fetch-happen@npm:^13.0.0":
   version: 13.0.1
   resolution: "make-fetch-happen@npm:13.0.1"
@@ -9541,6 +9665,15 @@ __metadata:
     promise-retry: ^2.0.1
     ssri: ^10.0.0
   checksum: 5c9fad695579b79488fa100da05777213dd9365222f85e4757630f8dd2a21a79ddd3206c78cfd6f9b37346819681782b67900ac847a57cf04190f52dda5343fd
+  languageName: node
+  linkType: hard
+
+"map-age-cleaner@npm:^0.1.3":
+  version: 0.1.3
+  resolution: "map-age-cleaner@npm:0.1.3"
+  dependencies:
+    p-defer: ^1.0.0
+  checksum: cb2804a5bcb3cbdfe4b59066ea6d19f5e7c8c196cd55795ea4c28f792b192e4c442426ae52524e5e1acbccf393d3bddacefc3d41f803e66453f6c4eda3650bc1
   languageName: node
   linkType: hard
 
@@ -9577,6 +9710,16 @@ __metadata:
   dependencies:
     "@babel/runtime": ^7.12.5
   checksum: 8ef956d9e63fe6f4041988beda69843b3a6bb48228ea2923a066f6e7c8f7c5dba75fae357318c48a97ed5beae840b8425cb7e727fc1bb77acc65f2005f8945ab
+  languageName: node
+  linkType: hard
+
+"mem@npm:^8.0.0":
+  version: 8.1.1
+  resolution: "mem@npm:8.1.1"
+  dependencies:
+    map-age-cleaner: ^0.1.3
+    mimic-fn: ^3.1.0
+  checksum: c41bc97f6f82b91899206058989e34bcb1543af40413c2ab59e5a8e97e4f8f2188d62e7bd95b2d575d5b0d823d5034a0f274a0676f6d11a0e0b973898b06c8b1
   languageName: node
   linkType: hard
 
@@ -9660,6 +9803,13 @@ __metadata:
   version: 2.1.0
   resolution: "mimic-fn@npm:2.1.0"
   checksum: d2421a3444848ce7f84bd49115ddacff29c15745db73f54041edc906c14b131a38d05298dae3081667627a59b2eb1ca4b436ff2e1b80f69679522410418b478a
+  languageName: node
+  linkType: hard
+
+"mimic-fn@npm:^3.1.0":
+  version: 3.1.0
+  resolution: "mimic-fn@npm:3.1.0"
+  checksum: f7b167f9115b8bbdf2c3ee55dce9149d14be9e54b237259c4bc1d8d0512ea60f25a1b323f814eb1fe8f5a541662804bcfcfff3202ca58df143edb986849d58db
   languageName: node
   linkType: hard
 
@@ -10575,6 +10725,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"p-defer@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "p-defer@npm:1.0.0"
+  checksum: 4271b935c27987e7b6f229e5de4cdd335d808465604644cb7b4c4c95bef266735859a93b16415af8a41fd663ee9e3b97a1a2023ca9def613dba1bad2a0da0c7b
+  languageName: node
+  linkType: hard
+
 "p-finally@npm:^2.0.0":
   version: 2.0.1
   resolution: "p-finally@npm:2.0.1"
@@ -11144,7 +11301,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prop-types@npm:^15.8.1":
+"prop-types@npm:^15.7.2, prop-types@npm:^15.8.1":
   version: 15.8.1
   resolution: "prop-types@npm:15.8.1"
   dependencies:
@@ -11322,6 +11479,43 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-calendar@npm:^5.0.0":
+  version: 5.1.0
+  resolution: "react-calendar@npm:5.1.0"
+  dependencies:
+    "@wojtekmaj/date-utils": ^1.1.3
+    clsx: ^2.0.0
+    get-user-locale: ^2.2.1
+    warning: ^4.0.0
+  peerDependencies:
+    "@types/react": ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+    react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+  checksum: 2f42fc7502bbb9f5ff549e2691579b596ab9b2d20561bb20d1bca2e8e04f2d6a86c1e9e71fac485258423250f05c1cbb4ba95dacacff33d0a9d7aa8cafd0e829
+  languageName: node
+  linkType: hard
+
+"react-clock@npm:^5.0.0":
+  version: 5.1.0
+  resolution: "react-clock@npm:5.1.0"
+  dependencies:
+    "@wojtekmaj/date-utils": ^1.5.0
+    clsx: ^2.0.0
+    get-user-locale: ^2.2.1
+  peerDependencies:
+    "@types/react": ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+    react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+  checksum: 7866b98a21ead517ef7b2c32195ef19c238336a609b57b6e2cd4a294f4f6982af0357a5d94e4ae903b00820ee7570e0045c503757866b5e6c632712f5679fbb2
+  languageName: node
+  linkType: hard
+
 "react-copy-to-clipboard@npm:~5.1.0":
   version: 5.1.0
   resolution: "react-copy-to-clipboard@npm:5.1.0"
@@ -11334,6 +11528,64 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-countdown@npm:^2.3.6":
+  version: 2.3.6
+  resolution: "react-countdown@npm:2.3.6"
+  dependencies:
+    prop-types: ^15.7.2
+  peerDependencies:
+    react: ">= 15"
+    react-dom: ">= 15"
+  checksum: c322ce627a1ddf3aea62f58a06a204234e4eaab880a385d46f37bf2e226cf0c4595fb0f9c36311d39e6338785aa99e54d7ddb21c39e1652f7bf1fd715a9c6ee7
+  languageName: node
+  linkType: hard
+
+"react-date-picker@npm:^11.0.0":
+  version: 11.0.0
+  resolution: "react-date-picker@npm:11.0.0"
+  dependencies:
+    "@wojtekmaj/date-utils": ^1.1.3
+    clsx: ^2.0.0
+    get-user-locale: ^2.2.1
+    make-event-props: ^1.6.0
+    react-calendar: ^5.0.0
+    react-fit: ^2.0.0
+    update-input-width: ^1.4.0
+  peerDependencies:
+    "@types/react": ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+    react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+  checksum: f8bc354aae4d571c6108fa90af46cbb2c5e7379d1f50b4b162960bb8ca6912919a445cced633a15d818c24df7c500d5ac4100df23224d15cbe069a3fae408858
+  languageName: node
+  linkType: hard
+
+"react-datetime-picker@npm:^6.0.1":
+  version: 6.0.1
+  resolution: "react-datetime-picker@npm:6.0.1"
+  dependencies:
+    "@wojtekmaj/date-utils": ^1.1.3
+    clsx: ^2.0.0
+    get-user-locale: ^2.2.1
+    make-event-props: ^1.6.0
+    react-calendar: ^5.0.0
+    react-clock: ^5.0.0
+    react-date-picker: ^11.0.0
+    react-fit: ^2.0.0
+    react-time-picker: ^7.0.0
+  peerDependencies:
+    "@types/react": ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+    react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+  checksum: 1d0695319d4d24cd1ee66adc68ad53f79a27f9732e7dda2c9845a15af3724de7d5a58b8b7993e67ae358bfd1743482f114624b709fe06d2e31983cfc1e097337
+  languageName: node
+  linkType: hard
+
 "react-dom@npm:~18.3.1":
   version: 18.3.1
   resolution: "react-dom@npm:18.3.1"
@@ -11343,6 +11595,25 @@ __metadata:
   peerDependencies:
     react: ^18.3.1
   checksum: 298954ecd8f78288dcaece05e88b570014d8f6dce5db6f66e6ee91448debeb59dcd31561dddb354eee47e6c1bb234669459060deb238ed0213497146e555a0b9
+  languageName: node
+  linkType: hard
+
+"react-fit@npm:^2.0.0":
+  version: 2.0.1
+  resolution: "react-fit@npm:2.0.1"
+  dependencies:
+    detect-element-overflow: ^1.4.0
+    warning: ^4.0.0
+  peerDependencies:
+    "@types/react": ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+    react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+    "@types/react-dom":
+      optional: true
+  checksum: f9f03ba3e87e0a514967801afeb5ad7137c7bb8576c374986922eed3e4bb842f35942153e692419dcbf382a00092ce46b64109610259870e75831378923aea90
   languageName: node
   linkType: hard
 
@@ -11446,6 +11717,28 @@ __metadata:
     "@types/react":
       optional: true
   checksum: 7ee8ef3aab74c7ae1d70ff34a27643d11ba1a8d62d072c767827d9ff9a520905223e567002e0bf6c772929d8ea1c781a3ba0cc4a563e92b1e3dc2eaa817ecbe8
+  languageName: node
+  linkType: hard
+
+"react-time-picker@npm:^7.0.0":
+  version: 7.0.0
+  resolution: "react-time-picker@npm:7.0.0"
+  dependencies:
+    "@wojtekmaj/date-utils": ^1.1.3
+    clsx: ^2.0.0
+    get-user-locale: ^2.2.1
+    make-event-props: ^1.6.0
+    react-clock: ^5.0.0
+    react-fit: ^2.0.0
+    update-input-width: ^1.4.0
+  peerDependencies:
+    "@types/react": ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+    react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+  checksum: 4f6453ba4e9ca6146265c95f500693052594b4c5cb430c4f6a61660d54d92ebbf0a2363d465dcd5e251e45e11fb63ea600f7d38f9a5ec7a9c838d7b84722967b
   languageName: node
   linkType: hard
 
@@ -13557,6 +13850,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"update-input-width@npm:^1.4.0":
+  version: 1.4.2
+  resolution: "update-input-width@npm:1.4.2"
+  checksum: a5a97f7cff47ca929d308a0a2cfcd12cc50a95d0877beabc7c7d07ec0c16c75e69ff507eb90a66990e443d4fd2963e2b13a7190d91bf053df57b0f5c4590537f
+  languageName: node
+  linkType: hard
+
 "uqr@npm:^0.1.2":
   version: 0.1.2
   resolution: "uqr@npm:0.1.2"
@@ -13800,28 +14100,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"viem@npm:^1.1.4":
-  version: 1.21.4
-  resolution: "viem@npm:1.21.4"
-  dependencies:
-    "@adraffy/ens-normalize": 1.10.0
-    "@noble/curves": 1.2.0
-    "@noble/hashes": 1.3.2
-    "@scure/bip32": 1.3.2
-    "@scure/bip39": 1.2.1
-    abitype: 0.9.8
-    isows: 1.0.3
-    ws: 8.13.0
-  peerDependencies:
-    typescript: ">=5.0.4"
-  peerDependenciesMeta:
-    typescript:
-      optional: true
-  checksum: c351fdea2d53d2d781ac73c964348b3b9fc5dd46f9eb53903e867705fc9e30a893cb9f2c8d7a00acdcdeca27d14eeebf976eed9f948c28c47018dc9211369117
-  languageName: node
-  linkType: hard
-
-"viem@npm:^2.1.1":
+"viem@npm:2.x, viem@npm:^2.1.1, viem@npm:^2.6.9":
   version: 2.21.45
   resolution: "viem@npm:2.21.45"
   dependencies:
@@ -13843,6 +14122,27 @@ __metadata:
   languageName: node
   linkType: hard
 
+"viem@npm:^1.1.4":
+  version: 1.21.4
+  resolution: "viem@npm:1.21.4"
+  dependencies:
+    "@adraffy/ens-normalize": 1.10.0
+    "@noble/curves": 1.2.0
+    "@noble/hashes": 1.3.2
+    "@scure/bip32": 1.3.2
+    "@scure/bip39": 1.2.1
+    abitype: 0.9.8
+    isows: 1.0.3
+    ws: 8.13.0
+  peerDependencies:
+    typescript: ">=5.0.4"
+  peerDependenciesMeta:
+    typescript:
+      optional: true
+  checksum: c351fdea2d53d2d781ac73c964348b3b9fc5dd46f9eb53903e867705fc9e30a893cb9f2c8d7a00acdcdeca27d14eeebf976eed9f948c28c47018dc9211369117
+  languageName: node
+  linkType: hard
+
 "wagmi@npm:2.12.23":
   version: 2.12.23
   resolution: "wagmi@npm:2.12.23"
@@ -13859,6 +14159,15 @@ __metadata:
     typescript:
       optional: true
   checksum: 6d20d0ad1f1d94e9dbb73dc3e678dbffe5eb4cceb5443824608d6b6274b13329b9b9855fb9795dc72ec69cf629925b57e0d069deebcdd0987798f292034a762e
+  languageName: node
+  linkType: hard
+
+"warning@npm:^4.0.0":
+  version: 4.0.3
+  resolution: "warning@npm:4.0.3"
+  dependencies:
+    loose-envify: ^1.0.0
+  checksum: 4f2cb6a9575e4faf71ddad9ad1ae7a00d0a75d24521c193fa464f30e6b04027bd97aa5d9546b0e13d3a150ab402eda216d59c1d0f2d6ca60124d96cd40dfa35c
   languageName: node
   linkType: hard
 
