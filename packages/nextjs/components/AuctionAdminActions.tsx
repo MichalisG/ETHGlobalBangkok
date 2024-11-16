@@ -36,8 +36,6 @@ export default function AuctionAdminActions(props: { auctionId: string }) {
     return <div>Please connect your wallet to view this auction</div>;
   }
 
-  const [totalBidAmount, numberOfBids = 2, withdrawn] = adminData || [];
-
   const hasEnded = Number(endTime) < Date.now() / 1000;
 
   const handleCloseAuction = async () => {
